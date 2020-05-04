@@ -16,6 +16,19 @@ before_install:
 #commands to run when test is executed
 #adding coverage means that it will automaitcally exit after running our test suite
 #anytime travis see we pushed new commit then travis will commit our code and run
-#and do some test and see whether test passed or not.
+#and do some test and see whether test passed or not.  
 script:
     - docker run anish/docker-react npm run test -- --coverage
+
+#we tell travis ci to use specific provider
+deploy: 
+  provider: elasticbeanstalk
+  region: "us-west-2" #what region our region is. 
+  #docker-env.qbtbvwcxmh.us-west-2.elasticbeanstalk.com
+  app: "docker"
+  env: "Docker-env"
+  bucker_name: "elasticbeanstalk-us-west-2-306476627547"  #name of the bucket that travis CI will put that zip file into
+  #this bucket name is in S3
+  bucket_path: "docker"  #name of the project will be same as appname.
+  on:
+    branch: master #anytime we put code into master branch then we can deploy.
