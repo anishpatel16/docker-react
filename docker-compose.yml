@@ -1,0 +1,29 @@
+version: '3'
+services:
+  web:  #hosting our development server
+    #previously, we uded 'build . ', but that time we have to assume that docker build
+    #is in the correct working directory.
+    build: 
+      #inorder for us to run the .dev file, we need to break down into 2 steps
+      context: . #this means that where do we want to pull our file and folder for this 
+      #image. so, we want our file and folder to come from the the current directory and 
+      #we wrote the '.'. if our file was nested to other filder, then we would write, 
+      #'context: anish' to find files 
+      dockerfile: Dockerfile.dev #we are saying that our dockerfile we will be using is
+      #.dev one and we will use this file inorder to create an image
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - .:/app #current folder outside container to app folder inside the container. local files in machine
+  tests: #second container runt test and rerun if value in the code changes.
+    #we don't use port since we are not taking care of porting part for this test
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app 
+      #override the command, we need to start with npm run test rather than npm run start
+    command: ["npm", "run", "test"] #array... 
+
