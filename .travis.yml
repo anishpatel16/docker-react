@@ -1,0 +1,21 @@
+#makesure we use . in front of the travis filename
+
+sudo: required #we need super user level permission to execute this build
+
+#by adding this, it will automatically will add copy of docker 
+services:
+  - docker 
+
+  #commands execute before we start running our test
+before_install:
+ # - docker build -f Dockerfile.dev . #using . means using current directory. 
+  #image tht is created, we refer it by using tag command
+  # -t <dockerusername> <name_of_git_repo>
+  - docker build -t anish/docker-react -f Dockerfile.dev .
+
+#commands to run when test is executed
+#adding coverage means that it will automaitcally exit after running our test suite
+#anytime travis see we pushed new commit then travis will commit our code and run
+#and do some test and see whether test passed or not.
+script:
+    - docker run anish/docker-react npm run test -- --coverage
